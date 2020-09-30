@@ -1,6 +1,5 @@
-#include <openpose/core/macros.hpp>
-#include <openpose/utilities/errorAndLog.hpp>
 #include <openpose/core/rectangle.hpp>
+#include <openpose/utilities/errorAndLog.hpp>
 
 namespace op
 {

@@ -2,7 +2,6 @@
 #define OPENPOSE_GUI_ADD_GUI_INFO_HPP
 
 #include <queue>
-#include <opencv2/core/core.hpp> // cv::Mat
 #include <openpose/core/common.hpp>
 
 namespace op
@@ -10,14 +9,17 @@ namespace op
     class OP_API GuiInfoAdder
     {
     public:
-        GuiInfoAdder(const Point<int>& outputSize, const int numberGpus, const bool guiEnabled = false);
+        GuiInfoAdder(const int numberGpus, const bool guiEnabled = false);
 
-        void addInfo(cv::Mat& cvOutputData, const Array<float>& poseKeypoints, const unsigned long long id, const std::string& elementRenderedName);
+        virtual ~GuiInfoAdder();
+
+        void addInfo(Matrix& outputData, const int numberPeople, const unsigned long long id,
+                     const std::string& elementRenderedName, const unsigned long long frameNumber,
+                     const Array<long long>& poseIds = Array<long long>{},
+                     const Array<float>& poseKeypoints = Array<float>{});
 
     private:
         // Const variables
-        const Point<int> mOutputSize;
-        const int mBorderMargin;
         const int mNumberGpus;
         const bool mGuiEnabled;
         // Other variables

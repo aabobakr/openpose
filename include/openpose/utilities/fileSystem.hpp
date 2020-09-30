@@ -5,11 +5,11 @@
 
 namespace op
 {
-    OP_API void mkdir(const std::string& directoryPath);
+    OP_API void makeDirectory(const std::string& directoryPath);
 
-    OP_API bool exist(const std::string& directoryPath);
+    OP_API bool existDirectory(const std::string& directoryPath);
 
-    OP_API bool isDirectory(const std::string& directoryPath);
+    OP_API bool existFile(const std::string& filePath);
 
     /**
      * This function makes sure that the directoryPathString is properly formatted. I.e., it
@@ -35,10 +35,25 @@ namespace op
 
     /**
      * This function extracts the extension from a full path.
+     * E.g., if fullPath is `/media/document.txt`, output will be `txt`
      * @param fullPath std::string with the full path.
      * @return std::string with the file extension.
      */
     OP_API std::string getFileExtension(const std::string& fullPath);
+
+    /**
+     * This function extracts the full file path without its extension from a full file path.
+     * @param fullPath std::string with the full path.
+     * @return std::string with the full file path without extension.
+     */
+    OP_API std::string getFullFilePathNoExtension(const std::string& fullPath);
+
+    /**
+     * This function extracts the full file path of the folder where it is contained.
+     * @param fullPath std::string with the full path.
+     * @return std::string with the full file path of the folder.
+     */
+    OP_API std::string getFileParentFolderPath(const std::string& fullPath);
 
     /**
      * This function extracts all the files in a directory path with the desired
@@ -47,16 +62,34 @@ namespace op
      * @param extensions std::vector<std::string> with the extensions of the desired files.
      * @return std::vector<std::string> with the existing file names.
      */
-    OP_API std::vector<std::string> getFilesOnDirectory(const std::string& directoryPath, const std::vector<std::string>& extensions = {});
+    OP_API std::vector<std::string> getFilesOnDirectory(
+        const std::string& directoryPath, const std::vector<std::string>& extensions = {});
 
     /**
-     * Analogous to getFilesOnDirectory(const std::string& directoryPath, const std::vector<std::string>& extensions) for 1 specific
-     * extension.
+     * Analogous to getFilesOnDirectory(const std::string& directoryPath, const std::vector<std::string>& extensions)
+     * for 1 specific extension.
      * @param directoryPath std::string with the directory path.
      * @param extension std::string with the extension of the desired files.
      * @return std::vector<std::string> with the existing file names.
      */
-    OP_API std::vector<std::string> getFilesOnDirectory(const std::string& directoryPath, const std::string& extension);
+    OP_API std::vector<std::string> getFilesOnDirectory(
+        const std::string& directoryPath, const std::string& extension);
+
+    /**
+     * This function extracts all the files in a directory path with the desired
+     * group of extensions (e.g., Extensions::Images).
+     * @param directoryPath std::string with the directory path.
+     * @param extensions Extensions with the kind of extensions desired (e.g., Extensions:Images).
+     * @return std::vector<std::string> with the existing file names.
+     */
+    OP_API std::vector<std::string> getFilesOnDirectory(
+        const std::string& directoryPath, const Extensions extensions);
+
+    OP_API std::string removeSpecialsCharacters(const std::string& stringToVariate);
+
+    OP_API void removeAllOcurrencesOfSubString(std::string& stringToModify, const std::string& substring);
+
+    OP_API void replaceAll(std::string& stringText, const char charToChange, const char charToAdd);
 }
 
 #endif // OPENPOSE_UTILITIES_FILE_SYSTEM_HPP

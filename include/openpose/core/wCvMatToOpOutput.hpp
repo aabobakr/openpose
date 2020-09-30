@@ -13,6 +13,8 @@ namespace op
     public:
         explicit WCvMatToOpOutput(const std::shared_ptr<CvMatToOpOutput>& cvMatToOpOutput);
 
+        virtual ~WCvMatToOpOutput();
+
         void initializationOnThread();
 
         void work(TDatums& tDatums);
@@ -40,6 +42,11 @@ namespace op
     }
 
     template<typename TDatums>
+    WCvMatToOpOutput<TDatums>::~WCvMatToOpOutput()
+    {
+    }
+
+    template<typename TDatums>
     void WCvMatToOpOutput<TDatums>::initializationOnThread()
     {
     }
@@ -52,19 +59,20 @@ namespace op
             if (checkNoNullNorEmpty(tDatums))
             {
                 // Debugging log
-                dLog("", Priority::Low, __LINE__, __FUNCTION__, __FILE__);
+                opLogIfDebug("", Priority::Low, __LINE__, __FUNCTION__, __FILE__);
                 // T* to T
                 auto& tDatumsNoPtr = *tDatums;
                 // Profiling speed
                 const auto profilerKey = Profiler::timerInit(__LINE__, __FUNCTION__, __FILE__);
                 // cv::Mat -> float*
-                for (auto& tDatum : tDatumsNoPtr)
-                    std::tie(tDatum.scaleInputToOutput, tDatum.outputData) = spCvMatToOpOutput->format(tDatum.cvInputData);
+                for (auto& tDatumPtr : tDatumsNoPtr)
+                    tDatumPtr->outputData = spCvMatToOpOutput->createArray(
+                        tDatumPtr->cvInputData, tDatumPtr->scaleInputToOutput, tDatumPtr->netOutputSize);
                 // Profiling speed
                 Profiler::timerEnd(profilerKey);
-                Profiler::printAveragedTimeMsOnIterationX(profilerKey, __LINE__, __FUNCTION__, __FILE__, Profiler::DEFAULT_X);
+                Profiler::printAveragedTimeMsOnIterationX(profilerKey, __LINE__, __FUNCTION__, __FILE__);
                 // Debugging log
-                dLog("", Priority::Low, __LINE__, __FUNCTION__, __FILE__);
+                opLogIfDebug("", Priority::Low, __LINE__, __FUNCTION__, __FILE__);
             }
         }
         catch (const std::exception& e)
